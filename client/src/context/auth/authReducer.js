@@ -26,8 +26,18 @@ import {
                     isAuthenticated: true,
                     loading: false
                 }
+            case LOGIN_SUCCESS:
+                localStorage.setItem('token', action.payload.token)
+                return {
+                    ...state,
+                    ...action.payload,
+                    isAuthenticated: true,
+                    loading: false
+                }
+            case LOGIN_FAIL:
             case AUTH_ERROR:
             case REGISTER_FAIL:
+            case LOGOUT:
                 localStorage.removeItem('token');
                 return {
                     ...state,
