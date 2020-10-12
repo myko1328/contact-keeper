@@ -56,7 +56,7 @@ const AuthState = (props) => {
     }
 
     try {
-      const res = await axios.post('/api/users', formData, config)
+      const res = await axios.post('/api/auth', formData, config)
 
       dispatch({
         type: REGISTER_SUCCESS,
@@ -73,8 +73,33 @@ const AuthState = (props) => {
   }
 
   // Login User
+  const login = async formData => {
+    //post
+    const config = {
+      headers: {
+        'Content-Type':'application/json'
+      }
+    }
+
+    try {
+      const res = await axios.post('/api/auth', formData, config)
+
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      })
+
+      loadUser()
+    } catch (err) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: err.response.data.msg
+      })
+    }
+  }
 
   // Logout
+  const logout = () => dispatch({ type: LOGOUT })
 
   // Clear Erros
   const clearErrors = () => dispatch({ type: CLEAR_ERRORS})
@@ -90,7 +115,9 @@ const AuthState = (props) => {
 
         register,
         clearErrors,
-        loadUser
+        loadUser,
+        login,
+        logout
       }}
     >
       {props.children}
