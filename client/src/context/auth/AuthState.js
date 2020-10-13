@@ -48,7 +48,6 @@ const AuthState = (props) => {
 
   // Register User
   const register = async formData => {
-    //post
     const config = {
       headers: {
         'Content-Type':'application/json'
@@ -74,7 +73,6 @@ const AuthState = (props) => {
 
   // Login User
   const login = async formData => {
-    //post
     const config = {
       headers: {
         'Content-Type':'application/json'
