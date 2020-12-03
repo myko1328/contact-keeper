@@ -1,19 +1,12 @@
-import React, { Fragment, useContext, useEffect } from "react"
-import { CSSTransition, TransitionGroup } from "react-transition-group"
-import ContactItem from "./ContactItem"
-import ContactContext from "../../context/contact/contactContext"
-import Spinner from "../layout/Spinner"
+import React, { Fragment, useEffect } from 'react'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import ContactItem from './ContactItem'
+import Spinner from '../layout/Spinner'
 
-const Contacts = () => {
-  const contactContext = useContext(ContactContext)
+import { getContacts } from '../../actions/contactActions'
+import { connect } from 'react-redux'
 
-  const { 
-    contacts, 
-    filtered, 
-    getContacts, 
-    loading 
-  } = contactContext
-
+const Contacts = ({ contacts, filtered, loading, getContacts }) => {
   useEffect(() => {
     getContacts()
     // eslint-disable-next-line
@@ -25,24 +18,39 @@ const Contacts = () => {
 
   return (
     <Fragment>
-      { contacts !== null & !loading ? (
+      {(contacts !== null) & !loading ? (
         <TransitionGroup>
-        {filtered !== null
-          ? filtered.map((contact) => (
-              <CSSTransition key={contact._id} timeout={500} classNames='item'>
-                <ContactItem contact={contact} />
-              </CSSTransition>
-            ))
-          : contacts.map((contact) => (
-              <CSSTransition key={contact._id} timeout={500} classNames='item'>
-                <ContactItem contact={contact} />
-              </CSSTransition>
-            ))}
+          {filtered !== null
+            ? filtered.map((contact) => (
+                <CSSTransition
+                  key={contact._id}
+                  timeout={500}
+                  classNames="item"
+                >
+                  <ContactItem contact={contact} />
+                </CSSTransition>
+              ))
+            : contacts.map((contact) => (
+                <CSSTransition
+                  key={contact._id}
+                  timeout={500}
+                  classNames="item"
+                >
+                  <ContactItem contact={contact} />
+                </CSSTransition>
+              ))}
         </TransitionGroup>
-        ) : <Spinner />
-      }
+      ) : (
+        <Spinner />
+      )}
     </Fragment>
   )
 }
 
-export default Contacts
+const mapStateToProps = (state) => ({
+  contacts: state.contacts.contacts,
+  filtered: state.contacts.filtered,
+  loading: state.contacts.loading,
+})
+
+export default connect(mapStateToProps, { getContacts })(Contacts)
